@@ -1,0 +1,11 @@
+*.iml
+*.ipr
+*.iws
+idea
+.idea
+.vendor-new
+.DS_Store
+*.tfstate.backup
+*.tfstate
+.terraform
+.terraform.lock.hcl
