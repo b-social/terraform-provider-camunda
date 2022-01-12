@@ -25,5 +25,9 @@ resource "camunda_deployment" "pd1" {
 
 ## Argument Reference
 
-- `key` - (Required) Key to identify a process definition.
+- `key` - (Required) Key to identify a deployment.
 - `resources` - (Required) A list of deployable files with a name and content.
+
+## Attribute Reference
+
+- `id` - id of a deployment.

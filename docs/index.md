@@ -20,9 +20,10 @@ provider "camunda" {
   endpoint = "http://localhost/engine-rest"
   username = "username"
   password = "password"
-  tls      = {
-    insecure_skip_verify = true
-  }
+  insecure_skip_verify = true
+  tls_certificate = ""
+  tls_key = ""
+  tls_ca = ""
 }
 ```
 
@@ -36,4 +37,7 @@ provider "camunda" {
 
 - **username** (String, Optional) Username to authenticate to Camunda API
 - **password** (String, Optional) Password to authenticate to Camunda API
-- **tls** (Tls, Optional) Tls configuration to communicate with the Camunda API
+- **insecure_skip_verify** (Boolean, Optional) Ignore self-signed certificates
+- **tls_certificate** (String, Optional) Certificate to authenticate to Camunda API
+- **tls_key** (String, Optional) Private Key to authenticate to Camunda API
+- **tls_ca** (String, Optional) Certificate Authority to authenticate to Camunda API
