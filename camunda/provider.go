@@ -3,6 +3,7 @@ package camunda
 import (
 	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"net"
 	"net/http"
 	"os"
@@ -46,6 +47,18 @@ func (p *provider) GetSchema(_ context.Context) (tfsdk.Schema, diag.Diagnostics)
 				Type:     types.BoolType,
 				Optional: true,
 			},
+			"tls_certificate": {
+				Type:     types.StringType,
+				Optional: true,
+			},
+			"tls_key": {
+				Type:     types.StringType,
+				Optional: true,
+			},
+			"tls_ca": {
+				Type:     types.StringType,
+				Optional: true,
+			},
 		},
 	}, nil
 }
@@ -56,6 +69,9 @@ type providerData struct {
 	Username           types.String `tfsdk:"username"`
 	Password           types.String `tfsdk:"password"`
 	InsecureSkipVerify types.Bool   `tfsdk:"insecure_skip_verify"`
+	TlsCertificate     types.String `tfsdk:"tls_certificate"`
+	TlsKey             types.String `tfsdk:"tls_key"`
+	TlsCA                 types.String `tfsdk:"tls_ca"`
 }
 
 func (p *provider) Configure(ctx context.Context, req tfsdk.ConfigureProviderRequest, resp *tfsdk.ConfigureProviderResponse) {
@@ -141,6 +157,25 @@ func (p *provider) Configure(ctx context.Context, req tfsdk.ConfigureProviderReq
 
 	if !config.InsecureSkipVerify.Null && !config.InsecureSkipVerify.Unknown {
 		tlsConfig.InsecureSkipVerify = config.InsecureSkipVerify.Value
+	}
+
+	if !config.TlsCertificate.Unknown && !config.TlsCertificate.Null && !config.TlsKey.Unknown && !config.TlsKey.Null {
+		pair, err := tls.X509KeyPair([]byte(config.TlsCertificate.Value), []byte(config.TlsKey.Value))
+		if err != nil {
+			// Error vs warning - empty value must stop execution
+			resp.Diagnostics.AddError(
+				"Unable to parse certificates",
+				err.Error(),
+			)
+			return
+		}
+		tlsConfig.Certificates = []tls.Certificate{pair}
+	}
+
+	if !config.TlsCA.Unknown && !config.TlsCA.Null {
+		certPool := x509.NewCertPool()
+		certPool.AppendCertsFromPEM([]byte(config.TlsCA.Value))
+		tlsConfig.ClientCAs = certPool
 	}
 
 	transport := &http.Transport{

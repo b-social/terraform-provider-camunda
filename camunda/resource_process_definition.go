@@ -92,7 +92,7 @@ func (r resourceDeployment) Create(ctx context.Context, req tfsdk.CreateResource
 		}
 	}
 
-	source := "terraform"
+	source := "Terraform Provider Camunda"
 	changedOnly := true
 
 	created, err := r.p.client.Deployment.Create(client.ReqDeploymentCreate{
