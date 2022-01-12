@@ -2,12 +2,12 @@
 page_title: "deployment Resource - terraform-provider-camunda"
 subcategory: ""
 description: |-
-  The process definition resource allows you to configure a Camunda deployment.
+  The deployment resource allows you to configure a Camunda deployment.
 ---
 
 # Resource `camunda_deployment`
 
-The order resource allows you to configure a Camunda process definition.
+The deployment resource allows you to configure a [Camunda deployment](https://docs.camunda.org/manual/7.16/reference/rest/deployment/).
 
 ## Example Usage
 
