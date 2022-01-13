@@ -176,6 +176,7 @@ func (p *provider) Configure(ctx context.Context, req tfsdk.ConfigureProviderReq
 		certPool := x509.NewCertPool()
 		certPool.AppendCertsFromPEM([]byte(config.TlsCA.Value))
 		tlsConfig.ClientCAs = certPool
+		tlsConfig.RootCAs = certPool
 	}
 
 	transport := &http.Transport{
